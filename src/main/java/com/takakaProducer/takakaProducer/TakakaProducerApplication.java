@@ -3,8 +3,14 @@ package com.takakaProducer.takakaProducer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
 
 @SpringBootApplication
 @RestController
@@ -17,6 +23,15 @@ public class TakakaProducerApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TakakaProducerApplication.class, args);
+	}
+	
+	@Bean
+	public Docket api() {
+	return new Docket(DocumentationType.SWAGGER_2)
+	.select()
+	.apis(RequestHandlerSelectors.basePackage("br.com.fiap.controller"))
+	.paths(PathSelectors.any())
+	.build();
 	}
 	
 
