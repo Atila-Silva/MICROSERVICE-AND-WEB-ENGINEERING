@@ -1,39 +1,31 @@
-package com.takakaProducer.takakaProducer;
-
+package com.takaka.takakaProducer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@RestController
+@EnableSwagger2
 public class TakakaProducerApplication {
-	
-	  @RequestMapping("/")
-	  public String home() {
-	    return "Hello Docker World hahaha";
-	  }
 
 	public static void main(String[] args) {
 		SpringApplication.run(TakakaProducerApplication.class, args);
 	}
-	
+
+	// endereço para chama o swagger - http://localhost:8080/fiap/swagger-ui/#/
 	@Bean
 	public Docket api() {
 	return new Docket(DocumentationType.SWAGGER_2)
 	.select()
-	.apis(RequestHandlerSelectors.basePackage("br.com.fiap.controller"))
+	.apis(RequestHandlerSelectors.basePackage("com.takaka.takakaProducer.controller"))
 	.paths(PathSelectors.any())
 	.build();
 	}
-	
-
 
 }

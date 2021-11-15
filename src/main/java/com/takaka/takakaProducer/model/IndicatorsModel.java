@@ -1,9 +1,10 @@
-package com.takakaProducer.takakaProducer.model;
+package com.takaka.takakaProducer.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,15 +13,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModelProperty;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "indicators")
-public class Indicators {
-	private String indicatorsId; 
-	private LocalDate date_update;
+public class IndicatorsModel {
+	
+	private Long indicatorsId; 
+	private LocalDateTime date_update;
 	private String goal;
 	private String target;
 	private String indicator;
@@ -30,16 +32,16 @@ public class Indicators {
 	private String geo_area_name;
 	private String time_period;
 	private String value;
-	private String userId;
+	private UserIndModel usuario;
 	
-	public Indicators() {	}
+	public IndicatorsModel() {	}
 
-	public Indicators(String indicatorsId, LocalDate date_update, String goal, String target, String indicator,
+	public IndicatorsModel(Long indicatorsId, String goal, String target, String indicator,
 			String series_code, String series_description, String geo_area_code, String geo_area_name,
-			String time_period, String value, String userId) {
+			String time_period, String value, UserIndModel usuario) {
 	
 		this.indicatorsId = indicatorsId;
-		this.date_update = date_update;
+		this.date_update = LocalDateTime.now();
 		this.goal = goal;
 		this.target = target;
 		this.indicator = indicator;
@@ -49,7 +51,7 @@ public class Indicators {
 		this.geo_area_name = geo_area_name;
 		this.time_period = time_period;
 		this.value = value;
-		this.userId = userId;
+		this.usuario = usuario;
 		
 		
 	}
@@ -59,26 +61,26 @@ public class Indicators {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "LOJA_PROD_SEQ")
 	@SequenceGenerator(name = "LOJA_PROD_SEQ", sequenceName = "LOJA_PROD_SEQ", allocationSize = 1)
 	@ApiModelProperty(value = "ID do Indicator")
-	public String getIndicatorsId() {
+	public Long getIndicatorsId() {
 		return indicatorsId;
 	}
 	
-	public void setIndicatorsId(String indicatorsId) {
+	public void setIndicatorsId(Long indicatorsId) {
 		this.indicatorsId = indicatorsId;
 	}
 
 	@Column(name = "date_update")
-	@ApiModelProperty(value = "Data da ultima atualizaÃ§Ã£o")
-	public LocalDate getDate_update() {
+	@ApiModelProperty(value = "Data da ultima atualização")
+	public LocalDateTime getDate_update() {
 		return date_update;
 	}
 
-	public void setDate_update(LocalDate date_update) {
+	public void setDate_update(LocalDateTime date_update) {
 		this.date_update = date_update;
 	}
 
 	@Column(name = "goal")
-	@ApiModelProperty(value = "InformÃ§ao do goal")
+	@ApiModelProperty(value = "Informçao do goal")
 	public String getGoal() {
 		return goal;
 	}
@@ -88,7 +90,7 @@ public class Indicators {
 	}
 
 	@Column(name = "target")
-	@ApiModelProperty(value = "InformÃ§ao do target")
+	@ApiModelProperty(value = "Informçao do target")
 	public String getTarget() {
 		return target;
 	}
@@ -98,7 +100,7 @@ public class Indicators {
 	}
 
 	@Column(name = "indicator")
-	@ApiModelProperty(value = "InformÃ§ao do indicator")
+	@ApiModelProperty(value = "Informçao do indicator")
 	public String getIndicator() {
 		return indicator;
 	}
@@ -108,7 +110,7 @@ public class Indicators {
 	}
 
 	@Column(name = "series_code")
-	@ApiModelProperty(value = "InformÃ§ao do series_code")
+	@ApiModelProperty(value = "Informçao do series_code")
 	public String getSeries_code() {
 		return series_code;
 	}
@@ -118,7 +120,7 @@ public class Indicators {
 	}
 
 	@Column(name = "series_description")
-	@ApiModelProperty(value = "InformÃ§ao do series_description")
+	@ApiModelProperty(value = "Informçao do series_description")
 	public String getSeries_description() {
 		return series_description;
 	}
@@ -128,7 +130,7 @@ public class Indicators {
 	}
 
 	@Column(name = "geo_area_code")
-	@ApiModelProperty(value = "InformÃ§ao do geo_area_code")
+	@ApiModelProperty(value = "Informçao do geo_area_code")
 	public String getGeo_area_code() {
 		return geo_area_code;
 	}
@@ -138,7 +140,7 @@ public class Indicators {
 	}
 
 	@Column(name = "geo_area_name")
-	@ApiModelProperty(value = "InformÃ§ao do geo_area_name")
+	@ApiModelProperty(value = "Informçao do geo_area_name")
 	public String getGeo_area_name() {
 		return geo_area_name;
 	}
@@ -148,7 +150,7 @@ public class Indicators {
 	}
 
 	@Column(name = "time_period")
-	@ApiModelProperty(value = "InformÃ§ao do time_period")
+	@ApiModelProperty(value = "Informçao do time_period")
 	public String getTime_period() {
 		return time_period;
 	}
@@ -158,7 +160,7 @@ public class Indicators {
 	}
 
 	@Column(name = "value")
-	@ApiModelProperty(value = "InformÃ§ao do value")
+	@ApiModelProperty(value = "Informçao do value")
 	public String getValue() {
 		return value;
 	}
@@ -167,20 +169,16 @@ public class Indicators {
 		this.value = value;
 	}
 
-	@JsonIgnore
+	//@JsonIgnore
 	@ManyToOne()
 	@JoinColumn(name = "userId", nullable = false)
-	@ApiModelProperty(value = "InformÃ§ao do userId")
-	public String getUserId() {
-		return userId;
+	@ApiModelProperty(value = "Informçao do usuario")
+	public UserIndModel getUserId() {
+		return usuario;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUserId(UserIndModel usuario) {
+		this.usuario = usuario;
 	}
-	
-	
-	
-	
-	
+
 }

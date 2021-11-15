@@ -1,6 +1,6 @@
-package com.takakaProducer.takakaProducer.model;
+package com.takaka.takakaProducer.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,25 +12,30 @@ import javax.persistence.Table;
 
 import io.swagger.annotations.ApiModelProperty;
 
+
+
+
+
+
 @Entity
 @Table(name = "user_ind")
-public class UserInd {
+public class UserIndModel {
 	
-	private String userId;
-	private LocalDate date_hour;
+	private Long userId;
+	private LocalDateTime date_hour;
 	private String firstName;
 	private String lastName;
 	private String email;
 	private String userPassword;
 	private int nivel;
 
-	public UserInd() {}
+	public UserIndModel() {}
 
-	public UserInd(String userId, LocalDate date_hour, String firstName, String lastName, String email,
+	public UserIndModel(Long userId, String firstName, String lastName, String email,
 			String userPassword, int nivel) {
 		
 		this.userId = userId;
-		this.date_hour = date_hour;
+		this.date_hour = LocalDateTime.now();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -43,21 +48,21 @@ public class UserInd {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userId_SEQ")
 	@SequenceGenerator(name = "userId_SEQ", sequenceName = "userId_SEQ", allocationSize = 1)
 	@ApiModelProperty(value = "ID do user")
-	public String getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
 	@Column(name = "date_hour")
 	@ApiModelProperty(value = "Data de cadastro")
-	public LocalDate getDate_hour() {
+	public LocalDateTime getDate_hour() {
 		return date_hour;
 	}
 
-	public void setDate_hour(LocalDate date_hour) {
+	public void setDate_hour(LocalDateTime date_hour) {
 		this.date_hour = date_hour;
 	}
 
@@ -101,7 +106,7 @@ public class UserInd {
 		this.userPassword = userPassword;
 	}
 	
-	@Column(name = "userPassword")
+	@Column(name = "nivel")
 	@ApiModelProperty(value = "nivel de acesso")
 	public int getNivel() {
 		return nivel;
@@ -111,7 +116,5 @@ public class UserInd {
 		this.nivel = nivel;
 	}
 	
-	
-	
-	
+
 }

@@ -1,4 +1,4 @@
-package com.takakaProducer.takakaProducer;
+package com.takaka.takakaProducer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
