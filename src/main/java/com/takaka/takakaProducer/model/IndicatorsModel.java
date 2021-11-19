@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
-@Table(name = "indicators")
+@Table(name = "indicators_producer")
 public class IndicatorsModel {
 	
 	private Long indicatorsId; 

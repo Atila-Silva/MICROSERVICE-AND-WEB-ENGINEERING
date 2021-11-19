@@ -7,6 +7,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.support.converter.StringJsonMessageConverter;
+import org.springframework.messaging.converter.GsonMessageConverter;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.takaka.takakaProducer.kafka.IndicatorsProducer;
 import com.takaka.takakaProducer.model.IndicatorsModel;
 import com.takaka.takakaProducer.repository.IndicatorsRepository;
 import com.takaka.takakaProducer.repository.UserIndRepository;
@@ -33,6 +38,12 @@ public class IndicatorsController {
 	
 	@Autowired
 	UserIndRepository userRepository;
+	
+	@Autowired
+	IndicatorsProducer indicatorsProducer;
+	
+	@Autowired
+	ObjectMapper mapper = new ObjectMapper();
 	
 	@GetMapping()
 	@ApiOperation(value = "Lista de indicators")
@@ -51,13 +62,16 @@ public class IndicatorsController {
 
 	@PostMapping()
 	@ApiOperation(value = "Salvar novo indicator")
-	public ResponseEntity<?> save(@RequestBody @Valid IndicatorsModel indicatorsModel, BindingResult bindingResult) {
+	public ResponseEntity<?> save(@RequestBody @Valid IndicatorsModel indicatorsModel, BindingResult bindingResult) throws JsonProcessingException {
 
 		if (bindingResult.hasErrors()) {
 			return ResponseEntity.badRequest().build();
 		}
 
 		IndicatorsModel indicators = indicatorsRepository.save(indicatorsModel);
+		String jsoninstring = mapper.writeValueAsString(indicators);
+		
+		indicatorsProducer.publish(indicators.getIndicatorsId().toString(), jsoninstring);
 
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(indicators.getUserId()).toUri();
@@ -91,7 +105,19 @@ public class IndicatorsController {
 	@GetMapping("/criarind")
 	@ApiOperation(value = "criar")
 	public void criar() {
-		indicatorsRepository.save(new IndicatorsModel((long) 1, "goal", "target", "indicator", "series_code", "series_description", "geo_area_code", "geo_area_name", "time_period", "value", userRepository.findById((long) 1).get()));
+		try {
+			IndicatorsModel indicators = new IndicatorsModel((long) 7,"goal", "target", "indicator", "series_code", "series_description", "geo_area_code", "geo_area_name", "time_period", "value", userRepository.findById((long) 1).get());
+			indicatorsRepository.save(indicators);
+			String jsoninstring = mapper.writeValueAsString(indicators);
+			System.out.println(jsoninstring);
+			IndicatorsModel indicators2 = mapper.readValue(jsoninstring, IndicatorsModel.class);
+			System.out.println(indicators2.toString());
+			indicatorsRepository.save(indicators2);
+			//StringJsonMessageConverter.class;
+			indicatorsProducer.publish(indicators.getIndicatorsId().toString(), jsoninstring);
+		} catch (Exception e) {
+			System.out.println("erro: "+ e);
+		}
 		
 	}
 
